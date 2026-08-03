@@ -1,0 +1,13 @@
+{
+  "name": "Sprout Farm",
+  "short_name": "Sprout",
+  "description": "A realistic little farm simulator — plant, tend, and harvest through the seasons.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#1F1712",
+  "theme_color": "#1F1712",
+  "orientation": "portrait-primary",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" }
+  ]
+}
