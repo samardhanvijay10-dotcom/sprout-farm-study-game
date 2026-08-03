@@ -54,24 +54,28 @@
     margin-bottom:8px; flex-shrink:0;
   }
   #calendarInfo { font-weight:700; font-size:13px; color: var(--text-dark); }
-  #weatherInfo { font-family:monospace; font-size:11px; color: var(--text-dark); opacity:0.75; margin-left:6px; }
+  #plotCount { font-family:monospace; font-size:11px; color: var(--text-dark); opacity:0.75; margin-left:6px; }
   .text-btn { background:none; border:none; font-family:monospace; font-size:10px; text-transform:uppercase; color: var(--text-dark); opacity:0.6; cursor:pointer; text-decoration:underline; }
 
-  /* 3x2 Grid fitting screen without scroll */
+  /* Scrollable Grid Container for 20 plots */
+  .grid-container {
+    flex:1;
+    overflow-y:auto;
+    padding-right: 4px;
+    scrollbar-width: thin;
+  }
+
   .grid { 
     display:grid; 
-    grid-template-columns: repeat(3, 1fr); 
-    grid-template-rows: repeat(2, 1fr); 
-    gap:8px; 
-    flex:1; 
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); 
+    gap:10px; 
     width:100%;
-    min-height:0;
   }
   
-  /* Make ENTIRE plot clickable */
+  /* Entire plot clickable */
   .plot { 
     position:relative; 
-    width:100%; height:100%;
+    height: 100px;
     border-radius:12px; 
     cursor:pointer; 
     display:flex; 
@@ -87,7 +91,7 @@
   }
   .plot:hover { border-color: var(--accent-gold); }
   .plot:active { transform: scale(0.98); }
-  .plot-emoji { font-size:28px; line-height:1; }
+  .plot-emoji { font-size:26px; line-height:1; }
   .plot-status { font-size:10px; font-family:monospace; margin-top:4px; background: rgba(0,0,0,0.6); padding: 2px 8px; border-radius: 10px; }
 
   .shop-dock { flex-shrink:0; background: var(--bg-dark); padding:8px 12px 12px; border-top: 1px solid var(--border-subtle); }
@@ -100,8 +104,6 @@
     cursor:pointer; border: 2px solid transparent; position:relative; transition: opacity 0.2s ease;
   }
   .seed-card.selected { border-color: var(--accent-green); background: #FFF; }
-  
-  /* Grayed out states */
   .seed-card.locked { opacity: 0.45; filter: grayscale(1); }
   .seed-card.cant-afford { opacity: 0.65; }
 
@@ -123,7 +125,7 @@
     <div class="stats">
       <div class="stat coins">
         <svg class="coin-icon" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8.5" fill="#E8A33D"/></svg>
-        <span id="coinsVal">50</span>
+        <span id="coinsVal">100</span>
       </div>
       <div class="stat level">
         <div class="level-header">
@@ -139,11 +141,13 @@
     <div class="farm-toolbar">
       <div>
         <span id="calendarInfo">Day 1 · Spring</span>
-        <span id="weatherInfo">☀️ Sunny</span>
+        <span id="plotCount">0 / 20 Plots Used</span>
       </div>
       <button id="resetBtn" class="text-btn">Reset</button>
     </div>
-    <div id="grid" class="grid"></div>
+    <div class="grid-container">
+      <div id="grid" class="grid"></div>
+    </div>
   </main>
 
   <footer class="shop-dock">
@@ -155,7 +159,6 @@
 </div>
 
 <script>
-  // Catalog of 10 seeds with cost, level locks, and XP
   const SEEDS = [
     { id: 'wheat', name: 'Wheat', emoji: '🌾', cost: 5, growTime: 2, sell: 10, xp: 5, minLevel: 1 },
     { id: 'carrot', name: 'Carrot', emoji: '🥕', cost: 10, growTime: 3, sell: 22, xp: 10, minLevel: 1 },
@@ -170,12 +173,12 @@
   ];
 
   let state = {
-    coins: 50,
+    coins: 100,
     level: 1,
     xp: 0,
     xpMax: 40,
     selectedSeed: null,
-    plots: Array(6).fill(null).map(() => ({ plant: null, progress: 0, ready: false }))
+    plots: Array(20).fill(null).map(() => ({ plant: null, progress: 0, ready: false }))
   };
 
   function addXP(amount) {
@@ -193,11 +196,13 @@
     document.getElementById('levelVal').innerText = `Lv.${state.level}`;
     document.getElementById('xpText').innerText = `${state.xp} / ${state.xpMax} XP`;
     
-    // XP Fill Bar calculation
+    const usedPlots = state.plots.filter(p => p.plant !== null).length;
+    document.getElementById('plotCount').innerText = `${usedPlots} / 20 Plots Used`;
+
     const xpPercent = Math.min(100, Math.floor((state.xp / state.xpMax) * 100));
     document.getElementById('xpFill').style.width = `${xpPercent}%`;
     
-    // Render Shop Tray with state handling
+    // Render Shop Tray
     const shopTray = document.getElementById('shopTray');
     shopTray.innerHTML = '';
     
@@ -240,7 +245,7 @@
       shopTray.appendChild(card);
     });
 
-    // Render Plots (entire box clickable)
+    // Render 20 Plots
     const grid = document.getElementById('grid');
     grid.innerHTML = '';
     state.plots.forEach((plot, index) => {
@@ -262,7 +267,6 @@
   function handlePlotClick(index) {
     const plot = state.plots[index];
     if (plot.ready) {
-      // Harvest action
       state.coins += plot.plant.sell;
       addXP(plot.plant.xp);
       document.getElementById('bannerText').innerText = `Harvested ${plot.plant.name}! +🪙${plot.plant.sell} +✨${plot.plant.xp}XP`;
@@ -292,12 +296,12 @@
   }
 
   document.getElementById('resetBtn').onclick = () => {
-    state.coins = 50;
+    state.coins = 100;
     state.level = 1;
     state.xp = 0;
     state.xpMax = 40;
     state.selectedSeed = null;
-    state.plots = Array(6).fill(null).map(() => ({ plant: null, progress: 0, ready: false }));
+    state.plots = Array(20).fill(null).map(() => ({ plant: null, progress: 0, ready: false }));
     render();
   };
 
