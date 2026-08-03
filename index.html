@@ -24,59 +24,56 @@
 
   .topbar {
     display:flex; justify-content: space-between; align-items:center;
-    padding: 10px 16px; background: rgba(31, 23, 18, 0.95);
+    padding: 8px 16px; background: rgba(31, 23, 18, 0.95);
     border-bottom: 1px solid var(--border-subtle);
     flex-shrink:0; gap:12px; z-index: 10;
   }
-  .brand-mark { font-weight:800; font-size:18px; color: var(--text-primary); letter-spacing:0.04em; text-transform: uppercase; }
-  .brand-sub { font-family:monospace; font-size:9px; letter-spacing:0.12em; text-transform:uppercase; color: var(--text-primary); opacity:0.5; }
+  .brand-mark { font-weight:800; font-size:16px; color: var(--text-primary); letter-spacing:0.04em; text-transform: uppercase; }
+  .brand-sub { font-family:monospace; font-size:8px; letter-spacing:0.12em; text-transform:uppercase; color: var(--text-primary); opacity:0.5; }
 
   .stats { display:flex; align-items:center; gap:12px; flex-shrink:0; }
   .stat.coins { display:flex; align-items:center; gap:6px; background: rgba(255,255,255,0.08); padding: 4px 10px; border-radius: 16px; border: 1px solid var(--border-subtle); }
   .coin-icon { width:14px; height:14px; flex-shrink:0; }
-  #coinsVal { font-family:monospace; font-weight:700; font-size:14px; color:#F0C674; }
+  #coinsVal { font-family:monospace; font-weight:700; font-size:13px; color:#F0C674; }
 
   .stat.level { display:flex; flex-direction:column; align-items:flex-end; }
   .level-header { display:flex; gap:8px; align-items:center; }
   #levelVal { font-family:monospace; font-weight:700; font-size:12px; color: var(--text-primary); }
   #xpText { font-family:monospace; font-size:10px; color: var(--accent-gold); }
-  .xp-track { width:100px; height:6px; background:rgba(239,234,217,0.15); border-radius:3px; overflow:hidden; margin-top:3px; }
+  .xp-track { width:90px; height:5px; background:rgba(239,234,217,0.15); border-radius:3px; overflow:hidden; margin-top:2px; }
   .xp-fill { height:100%; background: var(--accent-gold); width:0%; transition:width 0.3s ease; }
 
   .farm-panel {
     flex:1; display:flex; flex-direction:column; min-height:0;
-    margin:8px; background: var(--panel-bg); border-radius:16px; padding:10px;
+    margin:6px; background: var(--panel-bg); border-radius:14px; padding:8px;
     box-shadow: var(--shadow-soft); overflow:hidden;
   }
 
   .farm-toolbar {
     display:flex; align-items:center; justify-content:space-between;
-    margin-bottom:8px; flex-shrink:0;
+    margin-bottom:6px; flex-shrink:0;
   }
-  #calendarInfo { font-weight:700; font-size:13px; color: var(--text-dark); }
-  #plotCount { font-family:monospace; font-size:11px; color: var(--text-dark); opacity:0.75; margin-left:6px; }
+  #calendarInfo { font-weight:700; font-size:12px; color: var(--text-dark); }
+  #plotCount { font-family:monospace; font-size:10px; color: var(--text-dark); opacity:0.75; margin-left:6px; }
   .text-btn { background:none; border:none; font-family:monospace; font-size:10px; text-transform:uppercase; color: var(--text-dark); opacity:0.6; cursor:pointer; text-decoration:underline; }
 
-  /* Scrollable Grid Container for 20 plots */
-  .grid-container {
-    flex:1;
-    overflow-y:auto;
-    padding-right: 4px;
-    scrollbar-width: thin;
-  }
-
+  /* Grid layout forced into a 5x4 grid without any scrolling */
   .grid { 
     display:grid; 
-    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); 
-    gap:10px; 
+    grid-template-columns: repeat(5, 1fr); 
+    grid-template-rows: repeat(4, 1fr); 
+    gap:6px; 
     width:100%;
+    height:100%;
+    flex:1;
+    min-height:0;
   }
   
-  /* Entire plot clickable */
+  /* Compact plot scaling to fit height automatically */
   .plot { 
     position:relative; 
-    height: 100px;
-    border-radius:12px; 
+    height: 100%; 
+    border-radius:8px; 
     cursor:pointer; 
     display:flex; 
     flex-direction:column; 
@@ -84,33 +81,34 @@
     justify-content:center; 
     background: #5E432E; 
     color: #FFF; 
-    box-shadow: inset 0 2px 6px rgba(0,0,0,0.4); 
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.4); 
     border: 2px solid #3D291B; 
-    padding: 4px;
-    transition: transform 0.1s ease, border-color 0.2s ease;
+    padding: 2px;
+    transition: transform 0.08s ease, border-color 0.15s ease;
   }
+  .plot * { pointer-events: none; } /* Ensures full-box click target */
   .plot:hover { border-color: var(--accent-gold); }
-  .plot:active { transform: scale(0.98); }
-  .plot-emoji { font-size:26px; line-height:1; }
-  .plot-status { font-size:10px; font-family:monospace; margin-top:4px; background: rgba(0,0,0,0.6); padding: 2px 8px; border-radius: 10px; }
+  .plot:active { transform: scale(0.96); }
+  .plot-emoji { font-size:18px; line-height:1; }
+  .plot-status { font-size:8px; font-family:monospace; margin-top:2px; background: rgba(0,0,0,0.6); padding: 1px 4px; border-radius: 6px; }
 
-  .shop-dock { flex-shrink:0; background: var(--bg-dark); padding:8px 12px 12px; border-top: 1px solid var(--border-subtle); }
-  .selected-banner { display:flex; align-items:center; justify-content:center; font-family:monospace; font-size:11px; color: var(--text-primary); margin-bottom:8px; height:18px; text-align:center; }
+  .shop-dock { flex-shrink:0; background: var(--bg-dark); padding:6px 10px 10px; border-top: 1px solid var(--border-subtle); }
+  .selected-banner { display:flex; align-items:center; justify-content:center; font-family:monospace; font-size:11px; color: var(--text-primary); margin-bottom:6px; height:16px; text-align:center; }
   
-  .shop-tray { display:flex; gap:8px; overflow-x:auto; padding-bottom:4px; scrollbar-width: thin; }
+  .shop-tray { display:flex; gap:6px; overflow-x:auto; padding-bottom:4px; scrollbar-width: thin; }
   .seed-card { 
-    flex-shrink:0; width:84px; background: var(--panel-bg); border-radius:12px; 
-    padding:6px 4px; display:flex; flex-direction:column; align-items:center; gap:2px; 
+    flex-shrink:0; width:72px; background: var(--panel-bg); border-radius:10px; 
+    padding:5px 4px; display:flex; flex-direction:column; align-items:center; gap:2px; 
     cursor:pointer; border: 2px solid transparent; position:relative; transition: opacity 0.2s ease;
   }
   .seed-card.selected { border-color: var(--accent-green); background: #FFF; }
-  .seed-card.locked { opacity: 0.45; filter: grayscale(1); }
+  .seed-card.locked { opacity: 0.4; filter: grayscale(1); }
   .seed-card.cant-afford { opacity: 0.65; }
 
-  .seed-emoji { font-size:18px; }
-  .seed-name { font-weight:700; font-size:10px; color: var(--text-dark); }
-  .seed-cost { font-family:monospace; font-weight:700; font-size:10px; color: #8B5A2B; }
-  .seed-badge { font-size: 9px; font-weight:700; font-family:monospace; padding:1px 4px; border-radius:4px; margin-top:2px; }
+  .seed-emoji { font-size:16px; }
+  .seed-name { font-weight:700; font-size:9px; color: var(--text-dark); }
+  .seed-cost { font-family:monospace; font-weight:700; font-size:9px; color: #8B5A2B; }
+  .seed-badge { font-size: 8px; font-weight:700; font-family:monospace; padding:1px 3px; border-radius:4px; margin-top:1px; }
   .badge-lock { background:#8B0000; color:#FFF; }
   .badge-cant { background:#D97706; color:#FFF; }
 </style>
@@ -125,7 +123,7 @@
     <div class="stats">
       <div class="stat coins">
         <svg class="coin-icon" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8.5" fill="#E8A33D"/></svg>
-        <span id="coinsVal">100</span>
+        <span id="coinsVal">50</span>
       </div>
       <div class="stat level">
         <div class="level-header">
@@ -145,9 +143,7 @@
       </div>
       <button id="resetBtn" class="text-btn">Reset</button>
     </div>
-    <div class="grid-container">
-      <div id="grid" class="grid"></div>
-    </div>
+    <div id="grid" class="grid"></div>
   </main>
 
   <footer class="shop-dock">
@@ -173,7 +169,7 @@
   ];
 
   let state = {
-    coins: 100,
+    coins: 50,
     level: 1,
     xp: 0,
     xpMax: 40,
@@ -245,14 +241,14 @@
       shopTray.appendChild(card);
     });
 
-    // Render 20 Plots
+    // Render 20 Plots in 5x4 layout
     const grid = document.getElementById('grid');
     grid.innerHTML = '';
     state.plots.forEach((plot, index) => {
       const p = document.createElement('div');
       p.className = 'plot';
       if (!plot.plant) {
-        p.innerHTML = `<span style="opacity:0.3; font-size:24px;">🤎</span><span class="plot-status">Empty</span>`;
+        p.innerHTML = `<span style="opacity:0.3; font-size:16px;">🤎</span><span class="plot-status">Empty</span>`;
       } else if (plot.ready) {
         p.innerHTML = `<span class="plot-emoji">${plot.plant.emoji}</span><span class="plot-status" style="background:#3B6E3D; color:#FFF;">Harvest!</span>`;
       } else {
@@ -296,7 +292,7 @@
   }
 
   document.getElementById('resetBtn').onclick = () => {
-    state.coins = 100;
+    state.coins = 50;
     state.level = 1;
     state.xp = 0;
     state.xpMax = 40;
