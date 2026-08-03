@@ -4,9 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#1F1712">
-<meta name="description" content="A realistic little farm simulator — plant, tend, and harvest through the seasons.">
-<link rel="manifest" href="./manifest.json">
-<link rel="apple-touch-icon" href="./icon-192.png">
 <title>Sprout Farm — Cozy Seasonal Farming</title>
 <style>
   :root {
@@ -23,60 +20,58 @@
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; user-select:none; }
   html, body { width:100%; height:100%; overflow:hidden; background: var(--bg-dark); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Georgia, serif; }
 
-  #app { display:flex; flex-direction:column; height:100vh; height:100dvh; opacity:0; animation: fadeIn 0.5s ease forwards; }
-  @keyframes fadeIn { to { opacity:1; } }
+  #app { display:flex; flex-direction:column; height:100vh; height:100dvh; overflow:hidden; }
 
   .topbar {
     display:flex; justify-content: space-between; align-items:center;
-    padding: 14px 20px; background: rgba(31, 23, 18, 0.92);
-    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    padding: 10px 16px; background: rgba(31, 23, 18, 0.95);
     border-bottom: 1px solid var(--border-subtle);
     flex-shrink:0; gap:12px; z-index: 10;
   }
-  .brand { line-height:1.1; }
-  .brand-mark { font-weight:800; font-size:22px; color: var(--text-primary); letter-spacing:0.04em; text-transform: uppercase; }
-  .brand-sub { font-family:'SF Mono', Consolas, monospace; font-size:9px; letter-spacing:0.16em; text-transform:uppercase; color: var(--text-primary); opacity:0.45; margin-top:2px; }
+  .brand-mark { font-weight:800; font-size:18px; color: var(--text-primary); letter-spacing:0.04em; text-transform: uppercase; }
+  .brand-sub { font-family:monospace; font-size:9px; letter-spacing:0.12em; text-transform:uppercase; color: var(--text-primary); opacity:0.5; }
 
-  .stats { display:flex; align-items:center; gap:16px; flex-shrink:0; }
-  .stat.coins { display:flex; align-items:center; gap:6px; background: rgba(255,255,255,0.05); padding: 5px 10px; border-radius: 20px; border: 1px solid var(--border-subtle); }
-  .coin-icon { width:16px; height:16px; flex-shrink:0; }
-  #coinsVal { font-family:'SF Mono', Consolas, monospace; font-weight:700; font-size:15px; color:#F0C674; }
+  .stats { display:flex; align-items:center; gap:12px; flex-shrink:0; }
+  .stat.coins { display:flex; align-items:center; gap:6px; background: rgba(255,255,255,0.08); padding: 4px 10px; border-radius: 16px; border: 1px solid var(--border-subtle); }
+  .coin-icon { width:14px; height:14px; flex-shrink:0; }
+  #coinsVal { font-family:monospace; font-weight:700; font-size:14px; color:#F0C674; }
 
-  .stat.level { min-width:80px; text-align:right; }
-  #levelVal { font-family:'SF Mono', Consolas, monospace; font-weight:700; font-size:12px; color: var(--text-primary); }
-  .xp-track { width:80px; height:6px; background:rgba(239,234,217,0.15); border-radius:3px; overflow:hidden; margin-top:4px; }
+  .stat.level { display:flex; flex-direction:column; align-items:flex-end; }
+  .level-header { display:flex; gap:8px; align-items:center; }
+  #levelVal { font-family:monospace; font-weight:700; font-size:12px; color: var(--text-primary); }
+  #xpText { font-family:monospace; font-size:10px; color: var(--accent-gold); }
+  .xp-track { width:100px; height:6px; background:rgba(239,234,217,0.15); border-radius:3px; overflow:hidden; margin-top:3px; }
   .xp-fill { height:100%; background: var(--accent-gold); width:0%; transition:width 0.3s ease; }
 
   .farm-panel {
-    flex:1; display:flex; flex-direction:column; min-height:0; position:relative;
-    margin:12px; background: var(--panel-bg); border-radius:20px; padding:16px;
+    flex:1; display:flex; flex-direction:column; min-height:0;
+    margin:8px; background: var(--panel-bg); border-radius:16px; padding:10px;
     box-shadow: var(--shadow-soft); overflow:hidden;
   }
 
   .farm-toolbar {
-    display:flex; align-items:center; justify-content:space-between; gap:10px;
-    margin-bottom:12px; position:relative; z-index:5; width: 100%;
+    display:flex; align-items:center; justify-content:space-between;
+    margin-bottom:8px; flex-shrink:0;
   }
-  .toolbar-left { display:flex; flex-direction:column; gap:2px; }
-  #calendarInfo { font-weight:700; font-size:14px; color: var(--text-dark); }
-  #weatherInfo { font-family:'SF Mono', Consolas, monospace; font-size:11px; color: var(--text-dark); opacity:0.75; }
-  .toolbar-right { display:flex; align-items:center; gap:10px; margin-left: auto; }
-  #plotCount { font-family:'SF Mono', Consolas, monospace; font-size:11px; color: var(--text-dark); opacity:0.7; }
-  .text-btn { background:none; border:none; font-family:'SF Mono', Consolas, monospace; font-size:10px; text-transform:uppercase; color: var(--text-dark); opacity:0.5; cursor:pointer; text-decoration:underline; }
+  #calendarInfo { font-weight:700; font-size:13px; color: var(--text-dark); }
+  #weatherInfo { font-family:monospace; font-size:11px; color: var(--text-dark); opacity:0.75; margin-left:6px; }
+  .text-btn { background:none; border:none; font-family:monospace; font-size:10px; text-transform:uppercase; color: var(--text-dark); opacity:0.6; cursor:pointer; text-decoration:underline; }
 
+  /* 3x2 Grid fitting screen without scroll */
   .grid { 
     display:grid; 
     grid-template-columns: repeat(3, 1fr); 
     grid-template-rows: repeat(2, 1fr); 
-    gap:10px; 
-    position:relative; 
-    z-index:2; 
+    gap:8px; 
     flex:1; 
-    max-height: 100%;
+    width:100%;
+    min-height:0;
   }
   
+  /* Make ENTIRE plot clickable */
   .plot { 
     position:relative; 
+    width:100%; height:100%;
     border-radius:12px; 
     cursor:pointer; 
     display:flex; 
@@ -85,25 +80,37 @@
     justify-content:center; 
     background: #5E432E; 
     color: #FFF; 
-    box-shadow: inset 0 2px 5px rgba(0,0,0,0.4); 
+    box-shadow: inset 0 2px 6px rgba(0,0,0,0.4); 
     border: 2px solid #3D291B; 
-    padding: 6px;
-    transition: transform 0.1s ease;
+    padding: 4px;
+    transition: transform 0.1s ease, border-color 0.2s ease;
   }
-  .plot:active { transform: scale(0.97); }
-  .plot-emoji { font-size:24px; }
-  .plot-status { font-size:10px; font-family:'SF Mono', Consolas, monospace; margin-top:2px; background: rgba(0,0,0,0.5); padding: 2px 6px; border-radius: 8px; }
+  .plot:hover { border-color: var(--accent-gold); }
+  .plot:active { transform: scale(0.98); }
+  .plot-emoji { font-size:28px; line-height:1; }
+  .plot-status { font-size:10px; font-family:monospace; margin-top:4px; background: rgba(0,0,0,0.6); padding: 2px 8px; border-radius: 10px; }
 
-  .shop-dock { flex-shrink:0; background: var(--bg-dark); padding:10px 16px 16px; border-top: 1px solid var(--border-subtle); }
-  .selected-banner { display:flex; align-items:center; justify-content:center; gap:10px; font-family:'SF Mono', Consolas, monospace; font-size:11px; color: var(--text-primary); margin-bottom:10px; }
-  .shop-tray { display:flex; gap:10px; overflow-x:auto; padding-bottom:6px; scrollbar-width: thin; }
-  .seed-card { flex-shrink:0; width:82px; background: var(--panel-bg); border-radius:14px; padding:8px 6px; display:flex; flex-direction:column; align-items:center; gap:2px; cursor:pointer; border: 2px solid transparent; }
+  .shop-dock { flex-shrink:0; background: var(--bg-dark); padding:8px 12px 12px; border-top: 1px solid var(--border-subtle); }
+  .selected-banner { display:flex; align-items:center; justify-content:center; font-family:monospace; font-size:11px; color: var(--text-primary); margin-bottom:8px; height:18px; text-align:center; }
+  
+  .shop-tray { display:flex; gap:8px; overflow-x:auto; padding-bottom:4px; scrollbar-width: thin; }
+  .seed-card { 
+    flex-shrink:0; width:84px; background: var(--panel-bg); border-radius:12px; 
+    padding:6px 4px; display:flex; flex-direction:column; align-items:center; gap:2px; 
+    cursor:pointer; border: 2px solid transparent; position:relative; transition: opacity 0.2s ease;
+  }
   .seed-card.selected { border-color: var(--accent-green); background: #FFF; }
-  .seed-card.locked { opacity: 0.5; filter: grayscale(1); }
-  .seed-emoji { font-size:20px; }
-  .seed-name { font-weight:700; font-size:11px; color: var(--text-dark); }
-  .seed-cost { font-family:'SF Mono', Consolas, monospace; font-weight:700; font-size:10px; color: #8B5A2B; }
-  .seed-lock { font-size: 9px; font-weight:700; color: #B22222; font-family:'SF Mono', Consolas, monospace; }
+  
+  /* Grayed out states */
+  .seed-card.locked { opacity: 0.45; filter: grayscale(1); }
+  .seed-card.cant-afford { opacity: 0.65; }
+
+  .seed-emoji { font-size:18px; }
+  .seed-name { font-weight:700; font-size:10px; color: var(--text-dark); }
+  .seed-cost { font-family:monospace; font-weight:700; font-size:10px; color: #8B5A2B; }
+  .seed-badge { font-size: 9px; font-weight:700; font-family:monospace; padding:1px 4px; border-radius:4px; margin-top:2px; }
+  .badge-lock { background:#8B0000; color:#FFF; }
+  .badge-cant { background:#D97706; color:#FFF; }
 </style>
 </head>
 <body>
@@ -119,34 +126,36 @@
         <span id="coinsVal">50</span>
       </div>
       <div class="stat level">
-        <span id="levelVal">Lv.1</span>
+        <div class="level-header">
+          <span id="levelVal">Lv.1</span>
+          <span id="xpText">0 / 40 XP</span>
+        </div>
         <div class="xp-track"><div class="xp-fill" id="xpFill"></div></div>
       </div>
     </div>
   </header>
-  <main class="farm-panel" id="farmPanel">
+
+  <main class="farm-panel">
     <div class="farm-toolbar">
-      <div class="toolbar-left">
+      <div>
         <span id="calendarInfo">Day 1 · Spring</span>
         <span id="weatherInfo">☀️ Sunny</span>
       </div>
-      <div class="toolbar-right">
-        <span id="plotCount">6 / 6 plots</span>
-        <button id="resetBtn" class="text-btn">Reset</button>
-      </div>
+      <button id="resetBtn" class="text-btn">Reset</button>
     </div>
     <div id="grid" class="grid"></div>
   </main>
+
   <footer class="shop-dock">
     <div class="selected-banner">
-      <span id="bannerText">Select a seed below, then tap a plot to plant!</span>
+      <span id="bannerText">Select a seed below, then tap any plot to plant!</span>
     </div>
     <div id="shopTray" class="shop-tray"></div>
   </footer>
 </div>
 
 <script>
-  // 10 Seeds with level unlock progression
+  // Catalog of 10 seeds with cost, level locks, and XP
   const SEEDS = [
     { id: 'wheat', name: 'Wheat', emoji: '🌾', cost: 5, growTime: 2, sell: 10, xp: 5, minLevel: 1 },
     { id: 'carrot', name: 'Carrot', emoji: '🥕', cost: 10, growTime: 3, sell: 22, xp: 10, minLevel: 1 },
@@ -174,53 +183,71 @@
     while (state.xp >= state.xpMax) {
       state.xp -= state.xpMax;
       state.level++;
-      state.xpMax = Math.floor(state.xpMax * 1.4);
-      document.getElementById('bannerText').innerText = `🎉 LEVEL UP! You reached Level ${state.level}! New seeds unlocked!`;
+      state.xpMax = Math.floor(state.xpMax * 1.5);
+      document.getElementById('bannerText').innerText = `🎉 LEVEL UP! Reached Level ${state.level}!`;
     }
   }
 
   function render() {
     document.getElementById('coinsVal').innerText = state.coins;
     document.getElementById('levelVal').innerText = `Lv.${state.level}`;
+    document.getElementById('xpText').innerText = `${state.xp} / ${state.xpMax} XP`;
     
-    // XP Bar Update
+    // XP Fill Bar calculation
     const xpPercent = Math.min(100, Math.floor((state.xp / state.xpMax) * 100));
     document.getElementById('xpFill').style.width = `${xpPercent}%`;
     
-    // Render Shop Tray with 10 Seeds
+    // Render Shop Tray with state handling
     const shopTray = document.getElementById('shopTray');
     shopTray.innerHTML = '';
+    
     SEEDS.forEach(seed => {
       const isLocked = state.level < seed.minLevel;
-      const card = document.createElement('div');
-      card.className = `seed-card ${state.selectedSeed?.id === seed.id ? 'selected' : ''} ${isLocked ? 'locked' : ''}`;
+      const cantAfford = !isLocked && state.coins < seed.cost;
       
+      const card = document.createElement('div');
+      let cardClass = `seed-card ${state.selectedSeed?.id === seed.id ? 'selected' : ''}`;
+      if (isLocked) cardClass += ' locked';
+      else if (cantAfford) cardClass += ' cant-afford';
+      card.className = cardClass;
+      
+      let badgeHTML = `<div class="seed-cost">🪙 ${seed.cost}</div>`;
+      if (isLocked) {
+        badgeHTML = `<div class="seed-badge badge-lock">🔒 Lv.${seed.minLevel}</div>`;
+      } else if (cantAfford) {
+        badgeHTML = `<div class="seed-cost">🪙 ${seed.cost}</div><div class="seed-badge badge-cant">Need 🪙</div>`;
+      }
+
       card.innerHTML = `
         <div class="seed-emoji">${seed.emoji}</div>
         <div class="seed-name">${seed.name}</div>
-        ${isLocked ? `<div class="seed-lock">🔒 Lv.${seed.minLevel}</div>` : `<div class="seed-cost">🪙 ${seed.cost}</div>`}
+        ${badgeHTML}
       `;
       
       card.onclick = () => {
         if (isLocked) {
-          document.getElementById('bannerText').innerText = `🔒 Unlocks at Level ${seed.minLevel}! Keep harvesting to level up.`;
+          document.getElementById('bannerText').innerText = `🔒 Unlocks at Level ${seed.minLevel}! Harvest crops to gain XP.`;
+          return;
+        }
+        if (cantAfford) {
+          document.getElementById('bannerText').innerText = `🪙 You need ${seed.cost} coins for ${seed.name}!`;
           return;
         }
         state.selectedSeed = seed;
-        document.getElementById('bannerText').innerText = `Selected ${seed.name}. Tap a plot to plant!`;
+        document.getElementById('bannerText').innerText = `Selected ${seed.name}. Tap any plot to plant!`;
         render();
       };
       shopTray.appendChild(card);
     });
 
-    // Render Plots
+    // Render Plots (entire box clickable)
     const grid = document.getElementById('grid');
     grid.innerHTML = '';
     state.plots.forEach((plot, index) => {
       const p = document.createElement('div');
       p.className = 'plot';
       if (!plot.plant) {
-        p.innerHTML = `<span style="opacity:0.3; font-size:20px;">🤎</span><span class="plot-status">Empty</span>`;
+        p.innerHTML = `<span style="opacity:0.3; font-size:24px;">🤎</span><span class="plot-status">Empty</span>`;
       } else if (plot.ready) {
         p.innerHTML = `<span class="plot-emoji">${plot.plant.emoji}</span><span class="plot-status" style="background:#3B6E3D; color:#FFF;">Harvest!</span>`;
       } else {
@@ -235,7 +262,7 @@
   function handlePlotClick(index) {
     const plot = state.plots[index];
     if (plot.ready) {
-      // Harvest
+      // Harvest action
       state.coins += plot.plant.sell;
       addXP(plot.plant.xp);
       document.getElementById('bannerText').innerText = `Harvested ${plot.plant.name}! +🪙${plot.plant.sell} +✨${plot.plant.xp}XP`;
@@ -243,7 +270,7 @@
       render();
     } else if (!plot.plant && state.selectedSeed) {
       if (state.coins < state.selectedSeed.cost) {
-        document.getElementById('bannerText').innerText = "⚠️ Not enough coins!";
+        document.getElementById('bannerText').innerText = "⚠️ Need more coins to plant this!";
         return;
       }
       state.coins -= state.selectedSeed.cost;
